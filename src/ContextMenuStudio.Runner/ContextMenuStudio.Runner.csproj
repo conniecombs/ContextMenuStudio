@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF><AssemblyName>ContextMenuStudio.Runner</AssemblyName></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../ContextMenuStudio.Core/ContextMenuStudio.Core.csproj"/><Page Include="../Shared/Theme.xaml" Link="Themes/Theme.xaml"/></ItemGroup>
+</Project>

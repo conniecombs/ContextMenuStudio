@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF><AssemblyName>ContextMenuStudio.Desktop</AssemblyName></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../ContextMenuStudio.Core/ContextMenuStudio.Core.csproj"/>
+    <ProjectReference Include="../ContextMenuStudio.Runner/ContextMenuStudio.Runner.csproj" ReferenceOutputAssembly="false"/>
+    <Page Include="../Shared/Theme.xaml" Link="Themes/Theme.xaml"/>
+  </ItemGroup>
+  <Target Name="CopyRunnerForDevelopment" AfterTargets="Build">
+    <ItemGroup><RunnerFiles Include="../ContextMenuStudio.Runner/bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/ContextMenuStudio.Runner*"/></ItemGroup>
+    <Copy SourceFiles="@(RunnerFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+  </Target>
+</Project>

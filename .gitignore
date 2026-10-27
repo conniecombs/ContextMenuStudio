@@ -1,0 +1,19 @@
+# Build and publish outputs
+**/bin/
+**/obj/
+artifacts/
+app/
+validation/
+TestResults/
+*.log
+SHA256SUMS.json
+
+# IDE and tooling
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosv
+*.sln.docstates
+

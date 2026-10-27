@@ -1,0 +1,47 @@
+<Window x:Class="ContextMenuStudio.Desktop.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Context Menu Studio" Width="1160" Height="850" MinWidth="920" MinHeight="650" Style="{StaticResource {x:Type Window}}" WindowStartupLocation="CenterScreen" Closing="OnClosing">
+ <DockPanel Margin="24">
+  <StackPanel DockPanel.Dock="Top">
+   <TextBlock Text="Context Menu Studio" FontSize="28" FontWeight="SemiBold"/>
+   <TextBlock Text="Turn your PowerShell scripts into useful right-click actions." Foreground="#56657B" Margin="0,5,0,18"/>
+   <WrapPanel Margin="0,0,0,16">
+    <Button Content="Save draft" Click="SaveClick"/><Button Content="Apply menus" Style="{StaticResource PrimaryButton}" Click="ApplyClick"/>
+    <Button Content="Remove installed menus" Click="RemoveClick"/><Button Content="Import…" Click="ImportClick"/><Button Content="Export…" Click="ExportClick"/><Button Content="Data folder" Click="DataFolderClick"/>
+   </WrapPanel>
+  </StackPanel>
+  <Border DockPanel.Dock="Bottom" Padding="12" Background="#E5EBF4" Margin="0,16,0,0"><TextBlock x:Name="Status" Text="Draft only. Click Apply menus to register commands for your Windows account." TextWrapping="Wrap"/></Border>
+  <Grid>
+   <Grid.ColumnDefinitions><ColumnDefinition Width="270"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+   <DockPanel>
+    <WrapPanel DockPanel.Dock="Bottom" Margin="0,12,0,0"><Button Content="Add" Click="AddClick"/><Button Content="Duplicate" Click="DuplicateClick"/><Button Content="Delete" Click="DeleteClick"/><Button Content="↑" AutomationProperties.Name="Move command up" Click="UpClick" Margin="0,8,8,0"/><Button Content="↓" AutomationProperties.Name="Move command down" Click="DownClick" Margin="0,8,8,0"/><Button Content="Preview" Click="PreviewClick" Margin="0,8,0,0"/></WrapPanel>
+    <TextBlock DockPanel.Dock="Top" Text="YOUR COMMANDS" FontWeight="SemiBold" Foreground="#56657B" Margin="0,0,0,10"/>
+    <ListBox x:Name="CommandList" SelectionChanged="SelectionChanged" BorderBrush="#D3DBE6" Padding="6" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+     <ListBox.ItemTemplate><DataTemplate><StackPanel Margin="6,8"><TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap"/><TextBlock Text="{Binding Scope}" FontSize="12" Foreground="#65758B" Margin="0,4,0,0"/><TextBlock Text="Disabled" FontSize="11" Foreground="#97580F"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Enabled}" Value="False"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock></StackPanel></DataTemplate></ListBox.ItemTemplate>
+    </ListBox>
+   </DockPanel>
+   <Border Grid.Column="2" Background="White" BorderBrush="#D3DBE6" BorderThickness="1" Padding="20">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+     <StackPanel x:Name="Editor">
+      <TextBlock Text="Command settings" FontSize="21" FontWeight="SemiBold"/>
+      <TextBlock Text="Menu label" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Menu label"/>
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/></Grid.ColumnDefinitions>
+       <StackPanel><TextBlock Text="Show when right-clicking" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="ScopeCombo" SelectedItem="{Binding Scope}" AutomationProperties.Name="Menu scope"/></StackPanel>
+       <StackPanel Grid.Column="2"><TextBlock Text="File extension (FileExtension scope only)" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding Extension, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="File extension"/></StackPanel>
+      </Grid>
+      <TextBlock Text="Submenu group (optional)" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding Group, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Submenu group"/>
+      <TextBlock Text="Icon path or resource (optional; e.g. C:\Windows\System32\shell32.dll,0)" Style="{StaticResource FieldLabel}"/><DockPanel><Button DockPanel.Dock="Right" Content="Browse…" Click="IconClick" Margin="8,0,0,0"/><TextBox Text="{Binding Icon, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Icon"/></DockPanel>
+      <WrapPanel Margin="0,8,0,0"><CheckBox Content="Enabled" IsChecked="{Binding Enabled}"/><CheckBox Content="Shift only" IsChecked="{Binding ShiftOnly}"/><CheckBox Content="Confirm before running" IsChecked="{Binding Confirm}"/></WrapPanel>
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition Width="170"/></Grid.ColumnDefinitions>
+       <StackPanel><TextBlock Text="PowerShell engine" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="EngineCombo" SelectedItem="{Binding Engine}" AutomationProperties.Name="PowerShell engine"/></StackPanel>
+       <StackPanel Grid.Column="2"><TextBlock Text="Timeout (seconds)" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding TimeoutSeconds, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" AutomationProperties.Name="Timeout seconds"/></StackPanel>
+      </Grid>
+      <TextBlock Text="PowerShell script" Style="{StaticResource FieldLabel}"/>
+      <TextBlock Text="$TargetPath = selected item · $SelectedPaths = one-item array · $CurrentDirectory = containing/current folder" TextWrapping="Wrap" Foreground="#56657B" FontSize="12" Margin="0,0,0,8"/>
+      <TextBox Text="{Binding Script, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" FontFamily="Consolas" FontSize="13" Height="230" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Top" SpellCheck.IsEnabled="False" AutomationProperties.Name="PowerShell script"/>
+      <WrapPanel Margin="0,14,0,0"><Button Content="Test with file…" Click="TestFileClick"/><Button Content="Test with folder…" Click="TestFolderClick"/></WrapPanel>
+      <TextBlock Text="Tests execute the current script after confirmation. Installed commands run in a separate output window. Windows 11: use Show more options → Context Menu Studio." TextWrapping="Wrap" Foreground="#56657B" FontSize="12" Margin="0,12,0,0"/>
+     </StackPanel>
+    </ScrollViewer>
+   </Border>
+  </Grid>
+ </DockPanel>
+</Window>
